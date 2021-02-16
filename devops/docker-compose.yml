@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+    jupyter:
+      image: jupyter/datascience-notebook:latest
+      container_name: jupy
+      volumes:
+        - ./volume/datasets:/home/jovyan/work/datasets
+        - ./volume/notebooks:/home/jovyan/work/notebooks
+      # env_file:
+      #   - ./
+      restart: always
+      ports:
+        - 10000:8888
+      networks:
+        - internal
+
+
+networks:
+  internal:
+    name: jupyterNetwork
+    driver: bridge
+
+
+volumes:
+  notebook_data:
