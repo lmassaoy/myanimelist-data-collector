@@ -1,4 +1,4 @@
-# extration & analysis of Anime/Manga data
+# extration & analysis of anime/manga data
 
 Special thanks to this **AMAZING** website! ![blink-emoji-README.png](devops/volume/images/blink_emoji.png)
 
@@ -38,7 +38,7 @@ Once it's ready:
 4) choose a notebook or create one for yourself and start the analysis
 
 
-## Web scrape job (data extraction)
+## Web scrap job (data extraction)
 
 ![python-docker-README.png](devops/volume/images/python-docker.png)
 
