@@ -215,13 +215,6 @@ def main():
 
     start_time = time.time()
 
-    # --- Issues paralellizing because of variables of counts
-    # with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-    #     executor.submit(scrap_animes,601,10000)
-    #     executor.submit(scrap_animes,10001,20000)
-    #     executor.submit(scrap_animes,20001,30000)
-    #     executor.submit(scrap_animes,30001,42000)
-
     scrap_animes(start,end)
 
     print(f'--- It took {(time.time() - start_time)} seconds to complete all scraps ---')
