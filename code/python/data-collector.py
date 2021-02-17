@@ -195,14 +195,14 @@ def scrap_animes(start,end):
 
         if counter != start and counter % slice_size == 0:
             last_slice = counter
-            with open(f'devops/volume/datasets/anime/{counter-slice_size+1}-{last_slice}.json', 'w') as outfile:  
+            with open(f'devops/volume/datasets/anime/raw_data/{counter-slice_size+1}-{last_slice}.json', 'w') as outfile:  
                 json.dump(result_dict, outfile)
             result_dict = []
 
         time.sleep(0.5)
         counter+=1
 
-    with open(f'devops/volume/datasets/anime/{last_slice+1}-{counter}.json', 'w') as outfile:  
+    with open(f'devops/volume/datasets/anime/raw_data/{last_slice+1}-{counter}.json', 'w') as outfile:  
         json.dump(result_dict, outfile)
 
 
