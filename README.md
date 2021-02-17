@@ -1,4 +1,4 @@
-# extration, preparation and analysis of anime/manga data
+# myanimelist-data-collector
 
 Special thanks to this **AMAZING** website! ![blink-emoji-README.png](devops/volume/images/blink_emoji.png)
 
