@@ -152,7 +152,7 @@ def build_anime_dict(soup):
     anime_dict['synopsis'] = get_anime_synopsis(soup)
     anime_dict['background'] = get_anime_background(soup)
     anime_dict['details'] = get_anime_details(soup)
-    anime_dict['data_extraction'] = datetime.datetime.now().astimezone(brazil_time).strftime("%Y-%m-%d %H:%M:%S")
+    anime_dict['date_extraction'] = datetime.datetime.now().astimezone(brazil_time).strftime("%Y-%m-%d %H:%M:%S")
     
     return anime_dict
 
