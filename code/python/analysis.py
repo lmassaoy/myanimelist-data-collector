@@ -1,16 +1,17 @@
+from utils.images_downloader import ImageRenderDownloader
+
+from os import listdir
+from os.path import isfile, join
+from datetime import datetime
 import json
 import streamlit as st
 import pandas as pd
 from pandasql import sqldf
 import numpy as np
-import altair as alt
-from PIL import Image
-from os import listdir
-from os.path import isfile, join
-from datetime import datetime
 import matplotlib.pyplot as plt
-from utils.images_downloader import ImageRenderDownloader
-from random import randint
+import altair as alt
+
+from PIL import Image
 
 
 def session_break(times):
@@ -65,17 +66,6 @@ def build_image(path):
     return Image.open(path)
 
 
-# Images
-title = 'devops/volume/images/streamlit-title-img.png'
-
-# Framework setup
-pd.set_option('display.max_columns', None)
-pd.set_option('display.max_colwidth', 0)
-st.set_page_config(layout="wide")
-
-# Data import
-pysqldf = lambda q: sqldf(q, globals())
-
 # @st.cache
 def generate_datasets():  
     animes_df = pd.read_parquet('devops/volume/datasets/anime/enhanced_data/prepared_animes.parquet')
@@ -83,17 +73,22 @@ def generate_datasets():
     animes_list = concatened_json_files('devops/volume/datasets/anime/raw_data/')
     return animes_df, genres_df, animes_list
 
-animes_df, genres_df, animes_list = generate_datasets()
 
+# App setup
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_colwidth', 0)
+st.set_page_config(layout="wide")
+title = 'devops/volume/images/streamlit-title-img.png'
+pysqldf = lambda q: sqldf(q, globals())
+animes_df, genres_df, animes_list = generate_datasets()
 result_list = []
 for obj in animes_list:
     for value in obj['details']['Genres']:
         result_list.append(value)
 genres_list = list(set(result_list))
 
-
+# ------------------------------------------------------------------------------------------------------------------------
 # Sidebar
-
 st.sidebar.title("Navigation")
 st.sidebar.header("Filters")
 
@@ -126,13 +121,11 @@ with popularity_expander:
 genre_expander = st.sidebar.beta_expander("Genre", expanded=False)
 with genre_expander:
     genre_multiselect = st.multiselect('Select the genres',genres_list)
-    # genre_selectbox = st.selectbox('Select a genre',genres_list)
 
 type_expander = st.sidebar.beta_expander("Type", expanded=False)
 with type_expander:
     type_list = animes_df["details.Type"].drop_duplicates().values.tolist()
     type_multiselect = st.multiselect('Select the types',type_list,type_list)
-    # type_selectbox = st.selectbox('Select a type',type_list)
 
 rating_expander = st.sidebar.beta_expander("Rating", expanded=False)
 with rating_expander:
@@ -174,7 +167,7 @@ with search_by_studio_expander:
 #             format="YYYY-MM-DD"
 #         )
 
-
+# ------------------------------------------------------------------------------------------------------------------------
 # Filtering the dataset
 joined_df = pd.merge(animes_df, genres_df, on='id')
 
@@ -216,9 +209,7 @@ joined_df = joined_df[joined_df['details.Studios'].str.contains(search_by_studio
 # joined_df = joined_df[joined_df['aired_from'] >= aired_slider[0]]
 # joined_df = joined_df[joined_df['aired_to'] <= aired_slider[1]]
 
-
 # ------------------------------------------------------------------------------------------------------------------------
-
 # Main panel
 
 header_col1, header_col2 = st.beta_columns((2,1))
@@ -356,7 +347,10 @@ with viz_expander:
                             .groupby(genre, as_index=False)\
                             .agg('count')
         genres_labels.append(genre)
-        genres_sizes.append(genre_agg_df['id'].values[0])
+        if len(genre_agg_df.index) > 0:
+            genres_sizes.append(genre_agg_df['id'].values[0])
+        else:
+            genres_sizes.append(0)
 
     genres_dict = {'Genres': genres_labels, 'Animes': genres_sizes}  
     genre_agg_df = pd.DataFrame(genres_dict)
