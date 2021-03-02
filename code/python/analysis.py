@@ -9,6 +9,8 @@ from os import listdir
 from os.path import isfile, join
 from datetime import datetime
 import matplotlib.pyplot as plt
+from utils.images_downloader import ImageRenderDownloader
+from random import randint
 
 
 def session_break(times):
@@ -63,15 +65,13 @@ def build_image(path):
     return Image.open(path)
 
 
-st.set_page_config(layout="wide")
-
-
-# Image pathes
+# Images
 title = 'devops/volume/images/streamlit-title-img.png'
 
 # Framework setup
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_colwidth', 0)
+st.set_page_config(layout="wide")
 
 # Data import
 pysqldf = lambda q: sqldf(q, globals())
@@ -381,3 +381,68 @@ with viz_expander:
 
     st.altair_chart((bar+text), use_container_width=True)
     
+session_break(2)
+
+xray_expander = st.beta_expander('X-Ray (closer look into a title)', expanded=True)
+
+with xray_expander:
+    xray_filter_col1, xray_filter_col2 = st.beta_columns((1,1))
+    with xray_filter_col1:
+        title_list = animes_df[['id','title']].sort_values('id',ascending=True).drop_duplicates().values.tolist()
+        xray_selection = st.selectbox(label='ID, Title',options=title_list,index=10)
+
+        selected_anime = animes_df[animes_df['id']==xray_selection[0]]
+
+    xray_header_col1, xray_header_col2, xray_header_col3, xray_header_col4, xray_header_col5 = st.beta_columns((0.5,0.5,0.5,0.5,2.5))
+    with xray_header_col1:
+        st.header(float(selected_anime['details.Score']))
+        st.markdown('###### Score')
+    with xray_header_col2:
+        st.header(int(selected_anime["details.Ranked"]))
+        st.markdown('###### Rank')
+    with xray_header_col3:
+        st.header(int(selected_anime["details.Popularity"]))
+        st.markdown('###### Popularity')
+    with xray_header_col4:
+        st.header(int(selected_anime['details.Members']))
+        st.markdown('###### Members')
+    with xray_header_col5:
+        st.subheader('Links')
+        st.markdown(f'###### **Episodes**: {str(selected_anime["links.episodes"].values[0])}')
+        st.markdown(f'###### **Stats**: {str(selected_anime["links.stats"].values[0])}')
+        st.markdown(f'###### **Characters & Staff**: {str(selected_anime["links.characters & staff"].values[0])}')
+
+    session_break(2)
+
+    xray_body_col1, xray_body_col2, xray_body_col3, xray_body_col4 = st.beta_columns((1,1,1,1))
+    with xray_body_col1:
+        download_agent = ImageRenderDownloader(int(selected_anime["id"].values[0]),str(selected_anime["photo"].values[0]))
+        folder_path = download_agent.download()
+        st.image(build_image(folder_path))
+    with xray_body_col2:
+        st.subheader('Information')
+        session_break(1)
+        st.write(f'**Type**: {str(selected_anime["details.Type"].values[0])}')
+        st.write(f'**Episodes**: {selected_anime["details.Episodes"].values[0]}')
+        st.write(f'**Status**: {str(selected_anime["details.Status"].values[0])}')
+        st.write(f'**Aired**: {str(selected_anime["details.Aired"].values[0])}')
+        st.write(f'**Premiered**: {str(selected_anime["details.Premiered"].values[0])}')
+    with xray_body_col3:
+        session_break(4)
+        st.write(f'**Broadcast**: {str(selected_anime["details.Broadcast"].values[0])}')
+        st.write(f'**Producers**: {selected_anime["details.Producers"].values[0]}')
+        st.write(f'**Licensors**: {selected_anime["details.Licensors"].values[0]}')
+        st.write(f'**Studios**: {str(selected_anime["details.Studios"].values[0])}')
+    with xray_body_col4:
+        session_break(4)
+        st.write(f'**Source**: {str(selected_anime["details.Source"].values[0])}')
+        st.write(f'**Genres**: {selected_anime["details.Genres"].values[0]}')
+        st.write(f'**Duration**: {str(selected_anime["details.Duration"].values[0])}')
+        st.write(f'**Rating**: {str(selected_anime["details.Rating"].values[0])}')
+
+    xray_syn_col1, xray_syn_col2 = st.beta_columns((1,0.01))
+    with xray_syn_col1:
+        st.subheader('Synopsis')
+        st.markdown(str(selected_anime["synopsis"].values[0]))
+        st.subheader('Background')
+        st.markdown(str(selected_anime["background"].values[0]))
