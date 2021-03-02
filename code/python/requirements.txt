@@ -1,1 +1,6 @@
 pytz==2021.1
+pyarrow==3.0.0
+pandasql==0.7.3
+streamlit==0.77.0
+altair==4.1.0
+matplotlib==3.3.4
