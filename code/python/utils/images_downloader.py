@@ -4,7 +4,7 @@ import os
 
 class ImageRenderDownloader():
     def __init__(self,anime_id,image_url_path):
-        self.image_directory_path = 'devops/volume/images/folders/'
+        self.image_directory_path = 'devops/volume/images/covers/'
         self.anime_id = anime_id
         self.image_url_path = image_url_path
         
