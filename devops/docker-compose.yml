@@ -6,8 +6,6 @@ services:
       volumes:
         - ./volume/datasets:/home/jovyan/work/datasets
         - ./volume/notebooks:/home/jovyan/work/notebooks
-      # env_file:
-      #   - ./
       restart: always
       ports:
         - 10000:8888
