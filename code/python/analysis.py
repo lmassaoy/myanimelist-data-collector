@@ -7,7 +7,6 @@ import json
 from random import randint
 import streamlit as st
 import pandas as pd
-from pandasql import sqldf
 import numpy as np
 import matplotlib.pyplot as plt
 import altair as alt
@@ -69,9 +68,9 @@ def build_image(path):
 
 # @st.cache
 def generate_datasets():  
-    animes_df = pd.read_parquet('devops/volume/datasets/anime/enhanced_data/prepared_animes.parquet')
-    genres_df = pd.read_parquet('devops/volume/datasets/anime/enhanced_data/animes_genres.parquet')
-    animes_list = concatened_json_files('devops/volume/datasets/anime/raw_data/')
+    animes_df = pd.read_parquet('datasets/anime/enhanced_data/prepared_animes.parquet')
+    genres_df = pd.read_parquet('datasets/anime/enhanced_data/animes_genres.parquet')
+    animes_list = concatened_json_files('datasets/anime/raw_data/')
     return animes_df, genres_df, animes_list
 
 
@@ -79,8 +78,7 @@ def generate_datasets():
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_colwidth', 0)
 st.set_page_config(layout="wide")
-title = 'devops/volume/images/streamlit-title-img.png'
-pysqldf = lambda q: sqldf(q, globals())
+title = 'images/streamlit-title-img.png'
 animes_df, genres_df, animes_list = generate_datasets()
 result_list = []
 for obj in animes_list:
@@ -238,7 +236,7 @@ if not kpi_checkbox and not tops_checkbox and not viz_checkbox and not xray_chec
     session_break(2)
     img_col1, img_col2 = st.beta_columns((1,2))
     with img_col2:
-        st.image(build_image(f'devops/volume/images/welcome_page/welcome.png'))
+        st.image(build_image(f'images/welcome_page/welcome.png'))
 
 # Features
 if kpi_checkbox:

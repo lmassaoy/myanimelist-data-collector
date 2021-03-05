@@ -11,6 +11,17 @@ services:
         - 10000:8888
       networks:
         - internal
+    streamlit-app:
+      image: anime-data-app:latest
+      container_name: anime-app
+      volumes:
+        - ./volume/datasets:/app/datasets
+        - ./volume/images:/app/images
+      restart: always
+      ports:
+        - 10001:8501
+      networks:
+        - internal
 
 
 networks:
