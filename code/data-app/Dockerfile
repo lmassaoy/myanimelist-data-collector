@@ -1,4 +1,4 @@
-FROM amancevice/pandas:1.2.2-alpine
+FROM python:3.9-alpine3.12
 
 ARG TZ='America/Sao_Paulo'
 ENV DEFAULT_TZ ${TZ}
@@ -16,7 +16,16 @@ RUN apk upgrade --update \
   && rm -rf \
   /var/cache/apk/*
 
+RUN apk add --no-cache --update \
+  python3 python3-dev gcc \
+  gfortran musl-dev g++ \
+  libffi-dev openssl-dev \
+  libxml2 libxml2-dev \
+  libxslt libxslt-dev \
+  libjpeg-turbo-dev zlib-dev
+
 RUN pip3 install --upgrade pip
+RUN pip3 install --upgrade cython
 RUN pip3 install -r requirements.txt
 
 CMD [ "streamlit", "run", "analysis.py" ]

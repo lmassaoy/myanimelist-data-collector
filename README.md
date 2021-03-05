@@ -12,81 +12,40 @@ Its community is huge and engaged, participating in sharing reviews, applying ra
 
 Trusting in the website and its community/forum, we manage to scrape the data of anime/manga profiles to build a rich dataset to analyze, tell stories and recommend new series for you to watch, based on your favorite styles and series you've watched before.
 
-Embark into the architecture of this project:
+Take a look into the macro view of the project!
+
+![solutions-macro-view.png](devops/volume/images/solutions-macro-view.png)
+
+## Architecture
 
 ![architecture-README.png](devops/volume/images/architecture.png)
 
-## Analysis
+## ETL
 
-![jupy-docker-README.png](devops/volume/images/jupy-docker.png)
-
-To start the analysis on your own, you'll need to have a Docker instance installed and running in your PC.
-
-Once it's ready:
-1) start the docker-compose
-    ```
-    $ docker-compose up -d
-    ```
-2) run & copy the token from the logs:
-    ```
-    $ docker logs jupy
-    ```
-3) open your favorite browser and type:
-    ```
-    htttp://localhost:10000
-    ```
-4) choose a notebook or create one for yourself and start the analysis
-
-
-## Web scrap job (data extraction)
-
-![python-docker-README.png](devops/volume/images/python-docker.png)
-
-### Anime
-
-|Data|Status|
-|-|-|
-|Titles|OK|
-|Synopsis|OK|
-|Information|OK|
-|Statistics|OK|
-|Characters' Data|Pending|
-|Voice Actors' Data|Pending|
-|Episodes' Data|Pending|
-
-### Manga
-
-|Data|Status|
-|-|-|
-|Titles|Pending|
-|Synopsis|Pending|
-|Information|Pending|
-|Statistics|Pending|
-|Characters' Data|Pending|
-|Charpters' Data|Pending|
-
+### Extraction: Web scrap job
 
 ***Important:*** *Remember to interval the extractions to do not badly influence other users' experiences while navigating the website. Thank you!* ![blink-emoji-README.png](devops/volume/images/blink_emoji.png)
 
-This job can be executed directly in your workstation or as a container.
-
-To run it locally, you just need to run it as a normal python job, passing the start and end ID as arguments:
+Run it as a normal python job, passing the start and end 'anime ID' as arguments:
 
 ```
-
 $ python3 code/python/data-collector.py -s 1 -e 50000
-
 ```
 
-To run it as a container, you'll need to have a Docker instance installed and running on your PC.
+This job will collect the data from HTML through web scrap using the library [BeautifulSoup4](https://pypi.org/project/beautifulsoup4/) and persist as json files in the raw data layer.
 
-The steps are:
+### Transform and Load job
 
-1) build the docker image
-    ```
-    $ docker build -t mal-data-collector:latest -f devops/Dockerfile.DataCollector
-    ```
-2) start the docker-compose
-    ```
-    $ docker-compose up -d
-    ```
+Run it as a normal python job
+
+```
+$ python3 code/python/data-transformer.py
+```
+
+This job will read all json files, transforming in a single dataframe using [Pandas](https://pandas.pydata.org/pandas-docs/stable/index.html), enhancing the data and finally saving it as a parquet file in the enhanced data layer.
+
+## Services (Data App and Sandbox)
+
+### Data App
+
+### Sandbox
